@@ -2,8 +2,8 @@ addEventListener('fetch', event => {
 	event.respondWith(handleRequest(event.request))
 })
 
-var qqurl = QMSG;
-var weurl = FTQQ;
+var qqurl = new URL(QMSG);
+var weurl = new URL(FTQQ);
 
 async function parseParameters(request){
 	
@@ -13,7 +13,7 @@ async function parseParameters(request){
 	for(let x of params){
 		p[x[0]] = decodeURIComponent(x[1]);
 	}
-	const contentType = headers.get('content-type');
+	const contentType = await headers.get('content-type');
 	if(contentType && contentType.includes('form')){
 		const formData = await request.formData();
 		for (let x of formData.entries()) {
@@ -38,27 +38,31 @@ async function handleRequest(request) {
 	try {
 		var p = await parseParameters(request);
 		var t = p['type'];
-		var resp = 'bad geteway.';
+		var resp = 'bad gateway.';
 		if (t == 'qq') {
 			const opt = {
 				method: 'GET',
 				redirect: 'follow',
 			};
-			var r = await fetch(qqurl + '?msg=' + p['msg'], opt);
+			qqurl.searchParams.set('msg', p['msg']);
+			var r = await fetch(qqurl.toString(), opt);
 			resp = await r.text();
-		}else{
+		}else if(t == 'wechat'){
 			const opt = {
 				method: 'GET',
 				redirect: 'follow',
 				//body: JSON.stringify(p),
 				headers:{
 					'user-agent': 'curl/20.1',
-					'content-type': 'application/json',
+					//'content-type': 'application/json',
 				}
 			};
-			
-			var r = await fetch(weurl + '?text=' + encodeURIComponent(p['text']) + '&desp=' + encodeURIComponent(p['desp']), opt);
+			weurl.searchParams.set('text', p['text']);
+			weurl.searchParams.set('desp', p['desp']);
+			var r = await fetch(weurl.toString(), opt);
 			resp = await r.text();
+		}else{
+			resp = JSON.stringify(p);
 		}
 		return await buildResponse(resp);
 
