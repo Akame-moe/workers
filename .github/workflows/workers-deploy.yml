@@ -1,5 +1,6 @@
 name: auto deploy workers
 #https://github.community/t/how-to-run-github-actions-workflow-only-for-new-tags/16075/15
+#trigger when tag created and match the pattern(tag name starts with v)
 on:
   create:
     tags:
@@ -13,7 +14,7 @@ defaults:
     shell: bash
     
 jobs:
-  build_job:
+  deploy_job:
     name: deploy
     runs-on: ubuntu-latest
     steps:
