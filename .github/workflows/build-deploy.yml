@@ -29,4 +29,4 @@ jobs:
           cat stream.js | curl -X PUT "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/stream" \
           -H  "Authorization: Bearer $CF_API_TOKEN" \
           -H "Content-Type: application/javascript" \
-          --data -
+          --data-binary @-
