@@ -1,0 +1,30 @@
+name: auto deploy workers
+on:
+  push:
+    branches:
+      - master
+
+env:
+  scu_key: xxxxxxxxxxxxxxxxxxxx
+
+defaults:
+  run:
+    shell: bash
+    
+jobs:
+  build_job:
+    name: upload scripts
+    runs-on: ubuntu-latest
+    steps:
+      - id: aa
+        name: upload
+        if: ${{ github.event_name == 'push' }}
+        continue-on-error: false
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+        run: |
+          cat stream.js | curl -X PUT "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/stream" \
+          -H  "Authorization: Bearer $CF_API_TOKEN" \
+          -H "Content-Type: application/javascript" \
+          --data -
