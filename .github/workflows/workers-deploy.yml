@@ -30,3 +30,7 @@ jobs:
           -H  "Authorization: Bearer $CF_API_TOKEN" \
           -H "Content-Type: application/javascript" \
           --data-binary @-
+          cat push.js | curl -X PUT "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/push" \
+          -H  "Authorization: Bearer $CF_API_TOKEN" \
+          -H "Content-Type: application/javascript" \
+          --data-binary @-
