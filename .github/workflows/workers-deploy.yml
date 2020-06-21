@@ -1,8 +1,8 @@
 name: auto deploy workers
 on:
-  push:
-    branches:
-      - master
+  create:
+    tags:
+      - v*
 
 env:
   scu_key: xxxxxxxxxxxxxxxxxxxx
@@ -13,11 +13,11 @@ defaults:
     
 jobs:
   build_job:
-    name: upload scripts
+    name: deploy
     runs-on: ubuntu-latest
     steps:
-      - id: aa
-        name: upload
+      - id: deploy
+        name: clone & publish
         if: ${{ github.event_name == 'push' }}
         continue-on-error: false
         env:
