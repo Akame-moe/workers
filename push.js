@@ -28,7 +28,7 @@ async function buildResponse(resp){
 	resp_headers.set('access-control-allow-origin', '*');
 	resp_headers.set('access-control-expose-headers', '*');
 	resp_headers.set('Author', 'Akame');
-	//maybe batter approach:https://community.cloudflare.com/t/object-size-content-length/117100
+	//maybe better approach:https://community.cloudflare.com/t/object-size-content-length/117100
 	//const buf = await response.clone().arrayBuffer();
 	//buf.byteLength;
 	return new Response(resp, { status: 200, headers: resp_headers });
@@ -39,7 +39,7 @@ async function handleRequest(request) {
 		var p = await parseParameters(request);
 		var t = p['type'];
 		var resp = 'bad gateway.';
-		if (t == 'qq') {
+		if (t[0] == 'q') {
 			const opt = {
 				method: 'GET',
 				redirect: 'follow',
@@ -47,7 +47,7 @@ async function handleRequest(request) {
 			qqurl.searchParams.set('msg', p['msg']);
 			var r = await fetch(qqurl.toString(), opt);
 			resp = await r.text();
-		}else if(t == 'wechat'){
+		}else if(t[0] == 'w'){
 			const opt = {
 				method: 'GET',
 				redirect: 'follow',
