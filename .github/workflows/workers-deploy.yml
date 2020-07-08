@@ -25,12 +25,14 @@ jobs:
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
         run: |
-          git clone https://github.com/Akame-moe/workers
+          git clone https://github.com/$GITHUB_REPOSITORY
           cd workers
           for fname in $(ls | grep *.js); do 
             name=$(echo $fname | cut -d '.' -f 1) 
+            echo "uploading $fname"
             curl -X PUT "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/$name" \
               -H  "Authorization: Bearer $CF_API_TOKEN" \
               -H "Content-Type: application/javascript" \
               --data-binary @$name
           done
+          echo "Task Finished."
