@@ -27,11 +27,10 @@ jobs:
         run: |
           git clone https://github.com/Akame-moe/workers
           cd workers
-          cat stream.js | curl -X PUT "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/stream" \
-          -H  "Authorization: Bearer $CF_API_TOKEN" \
-          -H "Content-Type: application/javascript" \
-          --data-binary @-
-          cat push.js | curl -X PUT "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/push" \
-          -H  "Authorization: Bearer $CF_API_TOKEN" \
-          -H "Content-Type: application/javascript" \
-          --data-binary @-
+          for fname in $(ls | grep *.js); do 
+            name=$(echo $fname | cut -d '.' -f 1) 
+            curl -X PUT "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/$name" \
+              -H  "Authorization: Bearer $CF_API_TOKEN" \
+              -H "Content-Type: application/javascript" \
+              --data-binary @$name
+          done
