@@ -26,6 +26,8 @@ jobs:
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
         run: |
           git clone https://github.com/$GITHUB_REPOSITORY
+          pwd 
+          ls -R
           cd workers
           for fname in $(ls | grep *.js); do 
             name=$(echo $fname | cut -d '.' -f 1) 
